@@ -4,9 +4,9 @@
             <h2 id="title">
                 Todo List
             </h2>
-            <add-item-form/>
+            <add-item-form @itemChanged="getList()" />
       </div>
-      <listView/>
+      <listView :items="items" @itemChanged="getList()" />
   </div>
 </template>
 <script>
@@ -16,12 +16,29 @@ export default {
     components:{
         addItemForm,
         listView
+    },
+    data(){
+        return{
+            items: [] 
+        }
+    },
+    methods:{
+        getList(){
+            axios.get('/api/items').then(resp=>{
+                this.items = resp.data
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+    },
+    created(){
+        this.getList();
     }
 }
 </script>
 <style scoped>
 .todoListContainer{
-    width:350px;
+    width:600px;
     margin: auto;
 }
 .heading{
